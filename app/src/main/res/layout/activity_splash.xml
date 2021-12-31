@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorWhite"
-    tools:context="com.msaas.companyName.projectName.com.msaas.rnd.projectName.activities.SplashActivity">
+    tools:context=".activities.SplashActivity">
 
     <TextView
         android:id="@+id/activity_splash_tv_splash_screen"

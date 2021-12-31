@@ -55,7 +55,7 @@ public class FetchNewsFeedRx {
 
 
         queryMap.put(ApiConst.ATTR_TAG_QUERY_TEXT_KEY, mQueryText);
-        queryMap.put(ApiConst.ATTR_TAG_QUERY_FROM_KEY, AppUtil.getToday());
+        queryMap.put(ApiConst.ATTR_TAG_QUERY_FROM_KEY, /*AppUtil.getToday()*/"2021-12-31"); // TODO no data fetching for 2022
         queryMap.put(ApiConst.ATTR_TAG_QUERY_SORT_BY_KEY, AppConst.SORT_BY_VALUE);
         queryMap.put(ApiConst.ATTR_TAG_PAGE_SIZE_KEY, String.valueOf(AppConst.PAGE_SIZE_VALUE));
         queryMap.put(ApiConst.ATTR_TAG_PAGE_KEY, mPageCount);

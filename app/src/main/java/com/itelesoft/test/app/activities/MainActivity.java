@@ -3,11 +3,16 @@ package com.itelesoft.test.app.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ProgressBar;
-import android.widget.SearchView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
@@ -29,7 +34,8 @@ import com.itelesoft.test.app.viewModels.MainActivityViewModel;
 
 import java.util.List;
 
-public class MainActivity extends BaseActivity implements View.OnClickListener, OnItemClickListener<Article>, SearchView.OnQueryTextListener {
+public class MainActivity extends BaseActivity implements View.OnClickListener, OnItemClickListener<Article>
+        /*, SearchView.OnQueryTextListener*/ {
 
     // Constants
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -37,6 +43,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     // UI-Components
     private ProgressBar mProgressBar;
     private NestedScrollView mNestedSV;
+    private EditText mEtSearch;
     private Button mBtnCancel;
     private RecyclerView mRecyclerView;
 
@@ -44,7 +51,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private boolean mBackPressedToExitOnce = false;
     private MainActivityViewModel mViewModel;
     private int pageNumber = 1;
-    private String mQueryText = "";
     private List<Article> mArticles;
     private NewsFeedItemAdapter mAdapter;
     private int mTotalResults = 0;
@@ -72,8 +78,57 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         mBtnCancel = findViewById(R.id.btn_toolbar_cancel);
         mBtnCancel.setOnClickListener(this);
 
-        SearchView searchView = findViewById(R.id.sv_toolbar_query_text);
-        searchView.setOnQueryTextListener(this);
+        mEtSearch = findViewById(R.id.et_toolbar_query_text);
+
+        // When press done in soft key board
+        mEtSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    fetchDataFromNewAPI(mEtSearch.getText().toString(), pageNumber);
+                    AppUtil.hideDefaultKeyboard(MainActivity.this);
+                    return true;
+                }
+                return false;
+            }
+        });
+
+        // Text change listener
+        mEtSearch.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.length() == 0)
+                    mBtnCancel.setVisibility(View.GONE);
+                else
+                    mBtnCancel.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start,
+                                          int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start,
+                                      int before, int count) {
+                mRecyclerView.setVisibility(View.GONE);
+            }
+        });
+
+        // Handling edittext click event
+        mEtSearch.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean hasFocus) {
+                if (hasFocus) {
+                    Toast.makeText(getApplicationContext(), "Got the focus", Toast.LENGTH_LONG).show();
+                    mBtnCancel.setVisibility(View.VISIBLE);
+                } else {
+                    Toast.makeText(getApplicationContext(), "Lost the focus", Toast.LENGTH_LONG).show();
+                    mBtnCancel.setVisibility(View.GONE);
+                }
+            }
+        });
 
         // Show Progress bar using ProgressStatus
         mViewModel.getLiveRefreshStatus().observe(this, new Observer<Boolean>() {
@@ -100,7 +155,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                     if ((mTotalResults - (pageNumber * AppConst.PAGE_SIZE_VALUE)) > 0) {
                         Log.w(TAG, "----- All data fetched " + (mTotalResults - (pageNumber * AppConst.PAGE_SIZE_VALUE)));
                         pageNumber++;
-                        fetchDataFromNewAPI(mQueryText, pageNumber);
+                        fetchDataFromNewAPI(mEtSearch.getText().toString(), pageNumber);
                     } else {
                         // All News feed data has benn loaded
                         Log.w(TAG, "----- All data fetched ");
@@ -114,7 +169,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     protected void onResume() {
         super.onResume();
 
-        mRecyclerView.setVisibility(View.GONE);
+        resetView();
     }
 
     @Override
@@ -140,6 +195,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         switch (v.getId()) {
             case R.id.btn_toolbar_cancel:
                 AppUtil.hideDefaultKeyboard(MainActivity.this);
+                resetView();
 
                 break;
 
@@ -148,7 +204,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         }
     }
 
-    @Override
+    /*@Override
     public boolean onQueryTextChange(String newText) {
 
         if (newText.length() > 0)
@@ -164,7 +220,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         mQueryText = queryText;
         fetchDataFromNewAPI(queryText, pageNumber);
         return false;
-    }
+    }*/
 
     private void fetchDataFromNewAPI(String queryText, int pageNumber) {
 
@@ -223,13 +279,20 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         Article selectedArticle = new Article(article.getAuthor(), article.getTitle(), article.getDescription(),
                 article.getUrl(), article.getUrlToImage(), article.getPublishedAt(), article.getContent());
 
-        Intent mIntent = new Intent(MainActivity.this,DetailActivity.class);
+        Intent mIntent = new Intent(MainActivity.this, DetailActivity.class);
         Bundle mBundle = new Bundle();
-        mBundle.putSerializable(AppConst.EXTRA_NEWS_FEED_OBJ,selectedArticle);
+        mBundle.putSerializable(AppConst.EXTRA_NEWS_FEED_OBJ, selectedArticle);
         mIntent.putExtras(mBundle);
 
         AppUtil.startActivityWithExtra(MainActivity.this, mIntent);
 
+    }
+
+    private void resetView() {
+        pageNumber = 1; // Set to default value
+        mRecyclerView.setVisibility(View.GONE);
+        mBtnCancel.setVisibility(View.GONE);
+        mEtSearch.setText("");
     }
 
 }

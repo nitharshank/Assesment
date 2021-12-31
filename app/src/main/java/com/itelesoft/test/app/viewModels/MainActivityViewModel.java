@@ -52,6 +52,7 @@ public class MainActivityViewModel extends ViewModel {
 
     //-------- Login Process
     public void fetchNewsFeedProcess(String queryText, String pageNumber) {
+        Log.w(TAG, "---- "+queryText+" "+pageNumber);
         try {
             mLiveFetchNewsFeedProgressResult = new MutableLiveData<>();
 

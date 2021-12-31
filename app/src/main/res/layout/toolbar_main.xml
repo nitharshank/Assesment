@@ -13,7 +13,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="@dimen/_24sdp"
-        android:layout_marginRight="@dimen/_10sdp"
         android:orientation="vertical">
 
         <TextView
@@ -22,13 +21,34 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="News Feed"
+            android:layout_marginRight="@dimen/_10sdp"
             android:textColor="@android:color/white"
             android:textSize="@dimen/_12ssp"
             local:layout_constraintEnd_toEndOf="parent"
             local:layout_constraintStart_toStartOf="parent"
             local:layout_constraintTop_toTopOf="parent" />
 
-        <SearchView
+        <EditText
+            android:id="@+id/et_toolbar_query_text"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/_30sdp"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:layout_marginRight="@dimen/_8sdp"
+            android:background="@drawable/rounded_corners_edit_text"
+            android:drawableLeft="@drawable/ic_icon_search"
+            android:hint="@string/main_activity_toolbar_et_search_hint"
+            android:imeOptions="actionSearch"
+            android:inputType="text"
+            android:maxLines="1"
+            android:paddingLeft="@dimen/_5sdp"
+            android:textColor="@color/colorBlack"
+            android:textColorHint="@color/dark_gray"
+            android:textSize="@dimen/_12ssp"
+            local:layout_constraintEnd_toStartOf="@+id/btn_toolbar_cancel"
+            local:layout_constraintStart_toStartOf="parent"
+            local:layout_constraintTop_toBottomOf="@+id/tv_toolbar_title" />
+
+        <!--<SearchView
             android:id="@+id/sv_toolbar_query_text"
             android:layout_width="0dp"
             android:layout_height="@dimen/_30sdp"
@@ -37,7 +57,7 @@
             android:queryHint="Search"
             local:layout_constraintEnd_toStartOf="@+id/btn_toolbar_cancel"
             local:layout_constraintStart_toStartOf="parent"
-            local:layout_constraintTop_toBottomOf="@+id/tv_toolbar_title" />
+            local:layout_constraintTop_toBottomOf="@+id/tv_toolbar_title" />-->
 
         <Button
             android:id="@+id/btn_toolbar_cancel"
@@ -49,8 +69,9 @@
             android:textColor="@color/colorWhite"
             android:textSize="@dimen/_11ssp"
             android:visibility="gone"
-            local:layout_constraintBottom_toBottomOf="@+id/sv_toolbar_query_text"
-            local:layout_constraintEnd_toEndOf="parent" />
+            local:layout_constraintBottom_toBottomOf="@+id/et_toolbar_query_text"
+            local:layout_constraintEnd_toEndOf="parent"
+            local:layout_constraintTop_toTopOf="@+id/et_toolbar_query_text" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

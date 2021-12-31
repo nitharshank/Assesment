@@ -61,20 +61,17 @@ public class BaseActivity extends AppCompatActivity {
         }
 
         if (activity.getClass().getSimpleName().equals(MainActivity.class.getSimpleName())) {
-            SearchView searchView = findViewById(R.id.sv_toolbar_query_text);
-            searchView.setFocusable(true);
-            searchView.setFocusableInTouchMode(true);
-            searchView.requestFocus();
-            searchView.setSelected(true);
 
+            EditText searchEt = findViewById(R.id.et_toolbar_query_text);
+            searchEt.setFocusable(true);
+            searchEt.setFocusableInTouchMode(true);
 
-            int id = searchView.getContext().getResources().getIdentifier("android:id/search_src_text", null, null);
+            /*int id = searchView.getContext().getResources().getIdentifier("android:id/search_src_text", null, null);
             TextView textView = searchView.findViewById(id);
             textView.setTextColor(Color.BLACK);
             textView.setHint("Search");
-            //textView.setHighlightColor(getResources().getColor(R.color.colorHint));
             textView.setHintTextColor(Color.BLACK);
-            searchView.setQueryHint(Html.fromHtml("<font color = #ffffff>" + "Search" + "</font>"));
+            searchView.setQueryHint(Html.fromHtml("<font color = #ffffff>" + "Search" + "</font>"));*/
         }
 
         setSupportActionBar(mToolbar);
