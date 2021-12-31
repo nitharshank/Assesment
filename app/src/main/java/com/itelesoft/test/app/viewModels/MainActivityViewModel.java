@@ -101,6 +101,9 @@ public class MainActivityViewModel extends ViewModel {
                     BeanNewsFeed newsFeed = gson.fromJson(serviceResponseResponse.body(), BeanNewsFeed.class);
                     Log.w(TAG, "------ isSuccessful" + newsFeed.getArticles().size());
 
+                   // Insert query text to local db
+                    insertQueryText(queryText);
+
                     ProcessResult<BeanNewsFeed> result = new ProcessResult<>(AppConst.PROCESS_RESULT_ACTION_LOGIN,
                             AppConst.PROCESS_RESULT_STATUS_SUCCESS, newsFeed.getStatus(), newsFeed);
 
@@ -131,7 +134,7 @@ public class MainActivityViewModel extends ViewModel {
         }).callServiceRXWay();
     }
 
-    public void insertNote(String title) {
+    public void insertQueryText(String title) {
         AppExecutor.getInstance().diskIO().execute(() -> {
             //perform code for database operation
             MainActivityRepository.getInstance().insertQueryTextToLocalDb((new TB_SearchHistory(title)));

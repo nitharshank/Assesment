@@ -2,7 +2,6 @@ package com.itelesoft.test.app.repositories;
 
 import com.itelesoft.test.app.database.model.TB_SearchHistory;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivityRepository extends MainRepository {
@@ -14,7 +13,29 @@ public class MainActivityRepository extends MainRepository {
     private static MainActivityRepository mInstance;
 
     public void insertQueryTextToLocalDb(TB_SearchHistory queryText) {
-        getRoomDaoSession().searchHistoryDao().insertQueryText(queryText);
+
+        List<TB_SearchHistory> queryTextList = getRoomDaoSession().searchHistoryDao().getAllQueryTexts();
+
+        if (queryTextList.size() < 6 && !checkQueryTextExistInDb(queryTextList, queryText.getQueryText())) {
+            getRoomDaoSession().searchHistoryDao().insertQueryText(queryText);
+        } else {
+            getRoomDaoSession().searchHistoryDao().deleteQueryText(queryTextList.get((queryTextList.size() - 1)));
+            getRoomDaoSession().searchHistoryDao().insertQueryText(queryText);
+        }
+
+    }
+
+    // Prevent to insert same queryText again
+    private boolean checkQueryTextExistInDb(List<TB_SearchHistory> queryTextList, String queryText) {
+
+        // We are iterating here, Since the list size is small (Alw) else Better to use sqlite where clause query.
+        for (TB_SearchHistory searchItem : queryTextList) {
+            if (searchItem.getQueryText().equals(queryText)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public List<TB_SearchHistory> getAllQueryTextFromLocalDb() {

@@ -11,13 +11,6 @@
 
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorBlack">#000000</color>
-    <color name="colorCameraBack">#f2f2f2</color>
-    <color name="colorCameraBorder">#c6c6c6</color>
-
-    <!--Navigation drawer menuItem colors-->
-    <color name="colorSelectedMenuItemBackGround">#f6f6f6</color>
-    <color name="colorSelectedMenuItemText">#376fff</color>
-    <color name="colorNotSelectedMenuItemText">#525252</color>
 
     <!--Edit text colors-->
     <!--hint color-->
@@ -35,12 +28,4 @@
     <color name="colorButtonRipple">#3d8dbf</color>
     <color name="colorButtonGrayRipple">#dadada</color>
 
-    <!--Delivery orders state colors-->
-    <color name="color_do_inprogress">#f9bd4a</color>
-    <color name="color_do_pending">#f96778</color>
-
-    <!--Drops state colors-->
-    <color name="color_drop_delivered">#71ce7a</color>
-    <color name="color_drop_not_delivered">#f96778</color>
-    <color name="color_drop_pending">#1897a6</color>
 </resources>

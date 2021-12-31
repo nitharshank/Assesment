@@ -14,6 +14,8 @@ public class TB_SearchHistory {
 
     private String queryText;
 
+    public TB_SearchHistory() {
+    }
 
     public TB_SearchHistory(String queryText) {
         this.queryText = queryText;

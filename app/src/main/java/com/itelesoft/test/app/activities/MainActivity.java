@@ -45,7 +45,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private NestedScrollView mNestedSV;
     private EditText mEtSearch;
     private Button mBtnCancel;
-    private RecyclerView mRecyclerView;
+    private RecyclerView mRecyclerView, mRvSearchHistory;
 
     // Objects
     private boolean mBackPressedToExitOnce = false;
@@ -74,6 +74,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         mProgressBar = findViewById(R.id.activity_main_pb_loding);
         mNestedSV = findViewById(R.id.idNestedSV);
         mRecyclerView = findViewById(R.id.activity_main_rv_news_feed);
+        mRvSearchHistory = findViewById(R.id.activity_main_rv_search_history);
 
         mBtnCancel = findViewById(R.id.btn_toolbar_cancel);
         mBtnCancel.setOnClickListener(this);
@@ -113,18 +114,17 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             public void onTextChanged(CharSequence s, int start,
                                       int before, int count) {
                 mRecyclerView.setVisibility(View.GONE);
+                pageNumber = 1; // Set to default value
             }
         });
 
-        // Handling edittext click event
+        // Handling edittext click/ focus event
         mEtSearch.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean hasFocus) {
                 if (hasFocus) {
-                    Toast.makeText(getApplicationContext(), "Got the focus", Toast.LENGTH_LONG).show();
                     mBtnCancel.setVisibility(View.VISIBLE);
                 } else {
-                    Toast.makeText(getApplicationContext(), "Lost the focus", Toast.LENGTH_LONG).show();
                     mBtnCancel.setVisibility(View.GONE);
                 }
             }

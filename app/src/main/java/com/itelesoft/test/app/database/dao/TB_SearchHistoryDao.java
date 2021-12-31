@@ -15,8 +15,12 @@ import java.util.List;
 public interface TB_SearchHistoryDao {
 
     // Dao method to get all queryTexts
-    @Query("SELECT * FROM TB_SearchHistory")
+    @Query("SELECT * FROM TB_SearchHistory ORDER BY id DESC")
     List<TB_SearchHistory> getAllQueryTexts();
+
+    @Query("SELECT * FROM TB_SearchHistory where queryText = :text")
+    List<TB_SearchHistory> loadFromUser(String text);
+
 
     // Dao method to insert queryTexts
     @Insert(onConflict = IGNORE)
