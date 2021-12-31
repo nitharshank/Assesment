@@ -1,0 +1,32 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+buildscript {
+    
+    repositories {
+        google()
+        jcenter()
+        
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:4.0.0'
+
+        /*// Added for Firebase
+        classpath 'com.google.gms:google-services:4.3.3'
+
+        // Added for Firebase-Crashlytics
+        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.2.0'*/
+
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        jcenter()
+        
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}

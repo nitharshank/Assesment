@@ -1,0 +1,121 @@
+apply plugin: 'com.android.application'
+
+/*// Added for Firebase
+apply plugin: 'com.google.gms.google-services'
+
+// Added for Firebase Crashlytics
+apply plugin: 'com.google.firebase.crashlytics'*/
+
+android {
+    compileSdkVersion 29
+    buildToolsVersion "29.0.2"
+
+    defaultConfig {
+        applicationId "com.itelesoft.test.app"
+        minSdkVersion 19
+        targetSdkVersion 29
+        versionCode 1
+        versionName "1.0"
+        vectorDrawables.useSupportLibrary = true
+        //Enabling multiDex support
+        multiDexEnabled true
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+    dexOptions {
+        javaMaxHeapSize "4g"
+    }
+    /*Added following because Firebase Crashliticts library is trying to call some bootstrap methods and required for Lambda expressions*/
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    signingConfigs {
+        release {
+            storeFile file(RELEASE_STORE_FILE)
+            storePassword RELEASE_STORE_PASSWORD
+            keyAlias RELEASE_KEY_ALIAS
+            keyPassword RELEASE_KEY_PASSWORD
+        }
+        // For debug signingConfig > If We did not specifically add one > it gets Android default keystore to create the build
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            resValue "string", "app_name", "Assesment (Release)"
+            signingConfig signingConfigs.release
+            applicationIdSuffix = RELEASE_APPLICATION_ID_SUFFIC
+        }
+        debug {
+            resValue "string", "app_name", "Assesment (Debug)"
+            applicationIdSuffix = DEBUG_APPLICATION_ID_SUFFIC
+        }
+    }
+
+}
+
+dependencies {
+    final STETHO_VERSION = '1.5.1'
+    final DEBUG_DB_VERSION = '1.0.6'
+    final RETROFIT_VERSION = '2.9.0'
+    final ROOM_VERSION = "2.2.5"
+
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    // AndroidX
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0' // Support v4
+    implementation 'androidx.appcompat:appcompat:1.1.0' // Support v7
+    implementation 'androidx.cardview:cardview:1.0.0' // Android Support Card view
+    implementation 'com.google.android.material:material:1.3.0-alpha01' // Android Support Design
+
+    // retrofit2
+    implementation "com.squareup.retrofit2:retrofit:$RETROFIT_VERSION"
+    implementation "com.squareup.retrofit2:converter-gson:$RETROFIT_VERSION"
+    implementation "com.squareup.retrofit2:adapter-rxjava:$RETROFIT_VERSION"
+
+    // Unit Testing
+    testImplementation 'junit:junit:4.13'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+
+    // RxJava
+    implementation 'javax.inject:javax.inject:1'
+    implementation 'io.reactivex:rxandroid:1.2.1'
+    implementation 'io.reactivex:rxjava:1.3.8'
+
+    // SDP Unit size (non Text Views)
+    implementation 'com.intuit.sdp:sdp-android:1.0.6'
+
+    // SSP Unit size (Text Views)
+    implementation 'com.intuit.ssp:ssp-android:1.0.6'
+
+    // Stetho
+    implementation "com.facebook.stetho:stetho:$STETHO_VERSION"
+    implementation "com.facebook.stetho:stetho-okhttp3:$STETHO_VERSION"
+
+    // DB Debug
+    debugImplementation "com.amitshekhar.android:debug-db:$DEBUG_DB_VERSION"
+
+    /*// Firebase SDK for Google Analytics
+    implementation 'com.google.firebase:firebase-analytics:17.4.3'
+
+    // Firebase SDK for Crashlytics
+    implementation 'com.google.firebase:firebase-crashlytics:17.1.0'*/
+
+    // Dexter for Handle Runtime permission TODO
+    implementation 'com.karumi:dexter:6.2.0'
+
+    // Multidex enabled for Android 4.4 KitKat TODO
+    implementation 'com.android.support:multidex:1.0.3'
+
+    // Room DB
+    implementation "androidx.room:room-runtime:$ROOM_VERSION"
+    annotationProcessor "androidx.room:room-compiler:$ROOM_VERSION"
+
+    // Picasso image library
+    implementation 'com.squareup.picasso:picasso:2.5.2'
+}

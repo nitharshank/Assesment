@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/background_color"
+    android:padding="@dimen/_5sdp">
+
+    <View
+        android:id="@+id/view1"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_115sdp"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:background="@drawable/rounded_corners_item_bg"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <TextView
+        android:id="@+id/row_news_feed_item_tv_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_15sdp"
+        android:layout_marginEnd="@dimen/_10sdp"
+        android:maxLines="3"
+        android:text="Ted Lassco: Nick Mohammed on seasson 3, and what's nexty for Nate"
+        android:textColor="@color/colorBlack"
+        android:textSize="@dimen/_13ssp"
+        app:layout_constraintEnd_toEndOf="@+id/view1"
+        app:layout_constraintStart_toEndOf="@+id/row_news_feed_item_iv_thumbnail"
+        app:layout_constraintTop_toTopOf="@+id/row_news_feed_item_iv_thumbnail" />
+
+    <TextView
+        android:id="@+id/row_news_feed_item_tv_description"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_15sdp"
+        android:layout_marginTop="@dimen/_4sdp"
+        android:layout_marginEnd="@dimen/_10sdp"
+        android:maxLines="2"
+        android:text="Nick Mohammed on his path to Ted Lassco stradom a..."
+        android:textColor="@color/colorDefaultLabelText"
+        android:textSize="@dimen/_10ssp"
+        app:layout_constraintEnd_toEndOf="@+id/view1"
+        app:layout_constraintStart_toEndOf="@+id/row_news_feed_item_iv_thumbnail"
+        app:layout_constraintTop_toBottomOf="@+id/row_news_feed_item_tv_title" />
+
+    <TextView
+        android:id="@+id/row_news_feed_item_tv_date"
+        android:layout_width="@dimen/_70sdp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/_4sdp"
+        android:layout_marginBottom="@dimen/_5sdp"
+        android:text="28 Dec 2021"
+        android:textAlignment="textEnd"
+        android:textColor="@color/colorBlack"
+        android:textSize="@dimen/_10ssp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/view1"
+        app:layout_constraintEnd_toEndOf="@+id/view1" />
+
+    <ImageView
+        android:id="@+id/row_news_feed_item_iv_thumbnail"
+        android:layout_width="@dimen/_100sdp"
+        android:layout_height="@dimen/_100sdp"
+        android:layout_marginStart="@dimen/_8sdp"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="@+id/view1"
+        app:layout_constraintStart_toStartOf="@+id/view1"
+        app:layout_constraintTop_toTopOf="@+id/view1" />
+
+    <ProgressBar
+        android:id="@+id/row_news_feed_item_pb_loading"
+        android:layout_width="@dimen/_25sdp"
+        android:layout_height="@dimen/_25sdp"
+        android:layout_gravity="center_horizontal"
+        android:indeterminate="true"
+        android:indeterminateDrawable="@drawable/progress_bg"
+        android:progress="0"
+        app:layout_constraintBottom_toBottomOf="@+id/row_news_feed_item_iv_thumbnail"
+        app:layout_constraintEnd_toEndOf="@+id/row_news_feed_item_iv_thumbnail"
+        app:layout_constraintStart_toStartOf="@+id/row_news_feed_item_iv_thumbnail"
+        app:layout_constraintTop_toTopOf="@+id/row_news_feed_item_iv_thumbnail" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
