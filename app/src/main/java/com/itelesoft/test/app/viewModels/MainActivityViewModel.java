@@ -148,12 +148,17 @@ public class MainActivityViewModel extends ViewModel {
         AppExecutor.getInstance().diskIO().execute(() -> {
             //perform code for database operation
             queryTextList[0] = MainActivityRepository.getInstance().getAllQueryTextFromLocalDb();
+            Log.w(TAG, "----- "+queryTextList[0].size());
             mLiveQueryTextList.postValue(queryTextList[0]);
         });
     }
 
     public MutableLiveData<ProcessResult<BeanNewsFeed>> getLiveFetchNewsFeedProcessResult() {
         return mLiveFetchNewsFeedProgressResult;
+    }
+
+    public MutableLiveData<List<TB_SearchHistory>> getLiveSearchHistoryProcessResult() {
+        return mLiveQueryTextList;
     }
 
     public MutableLiveData<Boolean> getLiveRefreshStatus() {

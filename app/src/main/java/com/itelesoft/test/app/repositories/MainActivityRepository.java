@@ -16,11 +16,15 @@ public class MainActivityRepository extends MainRepository {
 
         List<TB_SearchHistory> queryTextList = getRoomDaoSession().searchHistoryDao().getAllQueryTexts();
 
-        if (queryTextList.size() < 6 && !checkQueryTextExistInDb(queryTextList, queryText.getQueryText())) {
-            getRoomDaoSession().searchHistoryDao().insertQueryText(queryText);
-        } else {
-            getRoomDaoSession().searchHistoryDao().deleteQueryText(queryTextList.get((queryTextList.size() - 1)));
-            getRoomDaoSession().searchHistoryDao().insertQueryText(queryText);
+        if(!checkQueryTextExistInDb(queryTextList, queryText.getQueryText())) {
+            if (queryTextList.size() < 6) {
+                getRoomDaoSession().searchHistoryDao().insertQueryText(queryText);
+            } else {
+                getRoomDaoSession().searchHistoryDao().deleteQueryText(queryTextList.get((queryTextList.size() - 1)));
+                getRoomDaoSession().searchHistoryDao().insertQueryText(queryText);
+            }
+        }else{
+            //Already search text found in Local db -- Ignore it
         }
 
     }
@@ -28,14 +32,15 @@ public class MainActivityRepository extends MainRepository {
     // Prevent to insert same queryText again
     private boolean checkQueryTextExistInDb(List<TB_SearchHistory> queryTextList, String queryText) {
 
+        boolean isFound = false;
         // We are iterating here, Since the list size is small (Alw) else Better to use sqlite where clause query.
         for (TB_SearchHistory searchItem : queryTextList) {
-            if (searchItem.getQueryText().equals(queryText)) {
-                return true;
+            if (searchItem.getQueryText().equalsIgnoreCase(queryText)) {
+                isFound = true;
             }
         }
 
-        return false;
+        return isFound;
     }
 
     public List<TB_SearchHistory> getAllQueryTextFromLocalDb() {
