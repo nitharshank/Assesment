@@ -11,6 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ellipsize="end"
+        android:textColor="@color/colorBlack"
         android:maxLines="1"
         android:layout_marginLeft="@dimen/_10sdp"
         android:padding="@dimen/_8sdp"
@@ -20,6 +21,6 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/_1sdp"
         android:background="@color/colorDefaultHint"
-        android:layout_marginLeft="@dimen/_10sdp"/>
+        android:layout_marginLeft="@dimen/_15sdp"/>
 
 </LinearLayout>

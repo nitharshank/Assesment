@@ -37,6 +37,7 @@ public class AppConst {
 
     // Intent extras
     public static final String EXTRA_NEWS_FEED_OBJ = "news_feed_obj";
+    public static final String EXTRA_NEWS_FEED_SOURCE_OBJ = "news_feed_source_obj";
 
     // Intent extra values
 

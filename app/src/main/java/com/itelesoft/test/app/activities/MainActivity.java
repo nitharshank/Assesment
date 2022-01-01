@@ -281,34 +281,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         mRvSearchHistory.setAdapter(mSearchHistoryAdapter);
     }
 
-
-    // NewsFeed item click
-    @Override
-    public void onItemClick(int position, final Article article) {
-
-        Article selectedArticle = new Article(article.getAuthor(), article.getTitle(), article.getDescription(),
-                article.getUrl(), article.getUrlToImage(), article.getPublishedAt(), article.getContent());
-
-        Intent mIntent = new Intent(MainActivity.this, DetailActivity.class);
-        Bundle mBundle = new Bundle();
-        mBundle.putSerializable(AppConst.EXTRA_NEWS_FEED_OBJ, selectedArticle);
-        mIntent.putExtras(mBundle);
-
-        AppUtil.startActivityWithExtra(MainActivity.this, mIntent);
-
-    }
-
-    // Search History item click
-    @Override
-    public void onSearchItemClick(int position, TB_SearchHistory historyItem) {
-        AppUtil.hideDefaultKeyboard(MainActivity.this);
-        pageNumber = 1;
-        mEtSearch.setText(historyItem.getQueryText());
-        mEtSearch.setSelection(historyItem.getQueryText().length()); // Set cursor point
-        mRvSearchHistory.setVisibility(View.GONE);
-        fetchDataFromNewAPI(historyItem.getQueryText(), pageNumber);
-    }
-
     // Filter search history as per user input
     //This feature added for best app behaviour and user experience
     private void filterSearchHistoryList(String queryText) {
@@ -335,22 +307,32 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         mEtSearch.setText("");
     }
 
-     /*@Override
-    public boolean onQueryTextChange(String newText) {
+    // NewsFeed item click
+    @Override
+    public void onItemClick(int position, final Article article) {
 
-        if (newText.length() > 0)
-            mBtnCancel.setVisibility(View.VISIBLE);
-        else
-            mBtnCancel.setVisibility(View.GONE);
+        Article selectedArticle = new Article(article.getAuthor(), article.getTitle(), article.getDescription(),
+                article.getUrl(), article.getUrlToImage(), article.getPublishedAt(), article.getContent());
 
-        return true;
+        Intent mIntent = new Intent(MainActivity.this, DetailActivity.class);
+        Bundle mBundle = new Bundle();
+        mBundle.putSerializable(AppConst.EXTRA_NEWS_FEED_OBJ, selectedArticle);
+        mBundle.putSerializable(AppConst.EXTRA_NEWS_FEED_SOURCE_OBJ, article.getSource());
+        mIntent.putExtras(mBundle);
+
+        AppUtil.startActivityWithExtra(MainActivity.this, mIntent);
+
     }
 
+    // Search History item click
     @Override
-    public boolean onQueryTextSubmit(String queryText) {
-        mQueryText = queryText;
-        fetchDataFromNewAPI(queryText, pageNumber);
-        return false;
-    }*/
+    public void onSearchItemClick(int position, TB_SearchHistory historyItem) {
+        AppUtil.hideDefaultKeyboard(MainActivity.this);
+        pageNumber = 1;
+        mEtSearch.setText(historyItem.getQueryText());
+        mEtSearch.setSelection(historyItem.getQueryText().length()); // Set cursor point
+        mRvSearchHistory.setVisibility(View.GONE);
+        fetchDataFromNewAPI(historyItem.getQueryText(), pageNumber);
+    }
 
 }

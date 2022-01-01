@@ -1,6 +1,7 @@
 package com.itelesoft.test.app.adapters;
 
 import android.app.Activity;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.itelesoft.test.app.R;
 import com.itelesoft.test.app.dtos.response.Article;
 import com.itelesoft.test.app.interfaces.listeners.OnItemClickListener;
+import com.itelesoft.test.app.utils.AppUtil;
 import com.itelesoft.test.app.utils.CircleTransform;
 import com.squareup.picasso.Picasso;
 
@@ -43,6 +45,8 @@ public class NewsFeedItemAdapter extends RecyclerView.Adapter<NewsFeedItemAdapte
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
         Article article = mArticles.get(position);
+        Typeface faceMedium = Typeface.createFromAsset(mContext.getAssets(), "Montserrat_Medium.otf");
+        Typeface faceBold = Typeface.createFromAsset(mContext.getAssets(), "Montserrat_SemiBold.otf");
 
         if (article.getTitle() != null && !article.getTitle().isEmpty())
             holder.mTitle.setText(article.getTitle());
@@ -53,8 +57,13 @@ public class NewsFeedItemAdapter extends RecyclerView.Adapter<NewsFeedItemAdapte
         else holder.mDescription.setText(" - ");
 
         if (article.getPublishedAt() != null && !article.getPublishedAt().isEmpty())
-            holder.mPublishedAt.setText(article.getPublishedAt());
+            holder.mPublishedAt.setText(AppUtil.formatPublishedDate(article.getPublishedAt()));
         else holder.mPublishedAt.setText(" - ");
+
+        // Set font
+        holder.mTitle.setTypeface(faceMedium);
+        holder.mDescription.setTypeface(faceMedium);
+        holder.mPublishedAt.setTypeface(faceBold);
 
         if (article.getUrlToImage() != null && !article.getUrlToImage().isEmpty()) {
 

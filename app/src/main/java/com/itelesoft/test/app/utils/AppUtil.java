@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.provider.Settings;
@@ -17,7 +16,6 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
@@ -29,11 +27,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class AppUtil {
-
-    // land to settings
-    public static void showSystemSettingsDialog(Context context) {
-        context.startActivity(new Intent(Settings.ACTION_WIRELESS_SETTINGS));
-    }
 
     // Land/Open Wireless Settings
     public static void showWirelessSystemSettingsDialog(Context context) {
@@ -68,55 +61,6 @@ public class AppUtil {
     public static void startActivityWithExtra(Activity activity, Intent intent) {
         activity.startActivity(intent);
         activity.overridePendingTransition(R.anim.pull_in_right, R.anim.push_out_left);
-    }
-
-    // custom alert dialog box (Updated UI)
-    public static void showCustomStandardAlert(final AlertDialog dialog, Activity activity, String title, String message, Drawable imageIconResource,
-                                               View.OnClickListener buttonClickListener, String buttonText, boolean cancelableState) {
-
-        LayoutInflater inflater = activity.getLayoutInflater();
-        final View dialogView = inflater.inflate(R.layout.dialog_custom_standard_alert, null);
-        dialogView.setLayerType(View.LAYER_TYPE_SOFTWARE, null); // This line is for hardware acceleration false
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        dialog.setView(dialogView);
-        dialog.setCancelable(cancelableState);
-
-        TextView tvTitle = dialogView.findViewById(R.id.custom_alert_tv_title);
-        TextView tvMessage = dialogView.findViewById(R.id.custom_alert_tv_description);
-        ImageView ivIcon = dialogView.findViewById(R.id.custom_alert_iv_icon);
-        ivIcon.setBackground(imageIconResource);
-        Button btnCancel = dialogView.findViewById(R.id.custom_alert_btn_text);
-        btnCancel.setOnClickListener(buttonClickListener);
-
-        if (buttonClickListener == null)
-            btnCancel.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    dialog.dismiss();
-                }
-            });
-        else {
-            btnCancel.setOnClickListener(buttonClickListener);
-        }
-
-        if (title.isEmpty()) {
-            tvTitle.setVisibility(View.GONE);
-        } else {
-            tvTitle.setText(title);
-        }
-
-        tvMessage.setText(message);
-        btnCancel.setText(buttonText);
-
-        Display display = activity.getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        int width = size.x;
-        Log.i("Screen Width: ", "" + width);
-
-        dialog.show();
-        dialog.getWindow().setLayout(width - 80, WindowManager.LayoutParams.WRAP_CONTENT);
-
     }
 
     // confirm alert dialog box (Updated UI)
@@ -172,6 +116,19 @@ public class AppUtil {
 
         dialog.show();
         dialog.getWindow().setLayout(width - 80, WindowManager.LayoutParams.WRAP_CONTENT);
+    }
+
+    public static String formatPublishedDate(String dateStr) {
+        try {
+            //String dateInString = "2014-10-05T15:23:01Z";
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
+            Date date = formatter.parse(dateStr.replaceAll("Z$", "+0000"));
+
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMM yyyy");
+            return dateFormat.format(date);
+        } catch (Exception e) {
+            return "-";
+        }
     }
 
     public static String getToday() {

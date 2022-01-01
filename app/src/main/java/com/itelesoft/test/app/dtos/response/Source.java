@@ -1,6 +1,10 @@
 package com.itelesoft.test.app.dtos.response;
 
-public class Source {
+import java.io.Serializable;
+
+public class Source implements Serializable {
+
+    private static final long serialVersionUID = 13234L;
 
     private String id;
     private String name;

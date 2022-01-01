@@ -106,9 +106,6 @@ dependencies {
     // Firebase SDK for Crashlytics
     implementation 'com.google.firebase:firebase-crashlytics:17.1.0'*/
 
-    // Dexter for Handle Runtime permission TODO
-    implementation 'com.karumi:dexter:6.2.0'
-
     // Multidex enabled for Android 4.4 KitKat TODO
     implementation 'com.android.support:multidex:1.0.3'
 

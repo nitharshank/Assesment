@@ -54,13 +54,12 @@
         android:id="@+id/row_news_feed_item_tv_date"
         android:layout_width="@dimen/_70sdp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/_4sdp"
-        android:layout_marginBottom="@dimen/_5sdp"
+        android:layout_marginEnd="@dimen/_6sdp"
+        android:layout_marginBottom="@dimen/_7sdp"
         android:text="28 Dec 2021"
         android:textAlignment="textEnd"
         android:textColor="@color/colorBlack"
-        android:textSize="@dimen/_10ssp"
-        android:textStyle="bold"
+        android:textSize="@dimen/_9ssp"
         app:layout_constraintBottom_toBottomOf="@+id/view1"
         app:layout_constraintEnd_toEndOf="@+id/view1" />
 
@@ -69,7 +68,7 @@
         android:layout_width="@dimen/_100sdp"
         android:layout_height="@dimen/_100sdp"
         android:layout_marginStart="@dimen/_8sdp"
-        android:scaleType="centerCrop"
+        android:scaleType="fitXY"
         app:layout_constraintBottom_toBottomOf="@+id/view1"
         app:layout_constraintStart_toStartOf="@+id/view1"
         app:layout_constraintTop_toTopOf="@+id/view1" />
