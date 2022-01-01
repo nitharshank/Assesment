@@ -6,7 +6,8 @@ public class AppConst {
     public static final String SANDBOX_BASE_URL_FOR_ROLES = "https://newsapi.org/";
 
     // TODO API keys can be secure using Android NDK if required--- https://www.geeksforgeeks.org/securing-api-keys-using-android-ndk/
-    public static final String SANDBOX_API_KEY = "ccc544eb0dc943dabe29617f809f94ac";
+   // public static final String SANDBOX_API_KEY = "ccc544eb0dc943dabe29617f809f94ac";
+    public static final String SANDBOX_API_KEY = "5088b7b10d074280a1cb5b4fec346108";
 
     // Production URL for for fetch News Feed
     public static final String PRODUCTION_BASE_URL_FOR_ROLES = "https://newsapi.org/";

@@ -27,6 +27,7 @@
     <string name="main_activity_back_button_press_text">Press again to exit</string>
     <string name="main_activity_toolbar_et_search_hint">Search</string>
     <string name="main_activity_empty_result">No any data fetched</string>
+    <string name="main_activity_all_data_fetched_text">All News feed has been fetched</string>
     <!--End of MainActivity String Resources-->
 
 </resources>

@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -15,7 +14,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.core.widget.NestedScrollView;
 import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -55,10 +53,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private MainActivityViewModel mViewModel;
     private int pageNumber = 1;
     private List<Article> mArticles;
+    private List<TB_SearchHistory> mSearchHistoryList;
     private NewsFeedItemAdapter mAdapter;
     private SearchHistoryAdapter mSearchHistoryAdapter;
     private int mTotalResults = 0;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,59 +83,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
         mEtSearch = findViewById(R.id.et_toolbar_query_text);
 
-        // When press done in soft key board
-        mEtSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    fetchDataFromNewAPI(mEtSearch.getText().toString(), pageNumber);
-                    AppUtil.hideDefaultKeyboard(MainActivity.this);
-                    return true;
-                }
-                return false;
-            }
-        });
-
-        // Text change listener
-        mEtSearch.addTextChangedListener(new TextWatcher() {
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (s.length() == 0) {
-                    //mBtnCancel.setVisibility(View.GONE);
-                    // populateSearchHistoryViewWithData();
-                } else {
-                    //mBtnCancel.setVisibility(View.VISIBLE);
-                }
-            }
-
-            @Override
-            public void beforeTextChanged(CharSequence s, int start,
-                                          int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start,
-                                      int before, int count) {
-                mNestedSV.setVisibility(View.GONE);
-                pageNumber = 1; // Set to default value
-            }
-        });
-
-        // Handling edittext click/ focus event
-        mEtSearch.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View view, boolean hasFocus) {
-                if (hasFocus) {
-                    Log.w(TAG, "----- hasFocus");
-                    mBtnCancel.setVisibility(View.VISIBLE);
-                    populateSearchHistoryViewWithData();
-                } else {
-                    mBtnCancel.setVisibility(View.GONE);
-                }
-            }
-        });
-
         // Show Progress bar using ProgressStatus
         mViewModel.getLiveRefreshStatus().observe(this, new Observer<Boolean>() {
             @Override
@@ -150,8 +95,71 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
             }
         });
 
+        // When press done in soft key board
+        mEtSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
 
-        // adding on scroll change listener method for nested scroll view.
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+
+                    pageNumber = 1; // Reset value to default
+                    AppUtil.hideDefaultKeyboard(MainActivity.this);
+
+                    String queryText = mEtSearch.getText().toString();
+
+                    if (queryText != null && !queryText.isEmpty()) {
+                        mViewModel.insertQueryText(queryText); // Insert queryText to searchHistory Table
+                        fetchDataFromNewAPI(queryText, pageNumber);
+                    }
+
+                    return true;
+                }
+                return false;
+            }
+        });
+
+        // Text change listener
+        mEtSearch.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                mRecyclerView.setVisibility(View.GONE);
+                if (s.length() > 0) {
+                    filterSearchHistoryList(s.toString());
+                } else {
+                    // This remove filter and add all searchText items
+                    if (mSearchHistoryList != null && mSearchHistoryList.size() > 0) {
+                        mSearchHistoryAdapter.setFilter(mSearchHistoryList);
+                        mSearchHistoryAdapter.notifyDataSetChanged();
+                    }
+                }
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start,
+                                          int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start,
+                                      int before, int count) {
+            }
+        });
+
+        // Handling edittext click or focus event
+        mEtSearch.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean hasFocus) {
+                if (hasFocus) {
+                    mBtnCancel.setVisibility(View.VISIBLE);
+                    populateSearchHistoryViewWithData();
+                } else {
+                    mBtnCancel.setVisibility(View.GONE);
+                }
+            }
+        });
+
+        // adding on scroll change listener method for nested scroll view
         mNestedSV.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
             @Override
             public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
@@ -160,24 +168,17 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                     // in this method, incrementing page number by 1,
                     // making progress bar visible and calling get data method.
 
+                    // Validate whether all data fetched
                     if ((mTotalResults - (pageNumber * AppConst.PAGE_SIZE_VALUE)) > 0) {
-                        Log.w(TAG, "----- All data fetched " + (mTotalResults - (pageNumber * AppConst.PAGE_SIZE_VALUE)));
                         pageNumber++;
                         fetchDataFromNewAPI(mEtSearch.getText().toString(), pageNumber);
                     } else {
                         // All News feed data has benn loaded
-                        Log.w(TAG, "----- All data fetched ");
+                        Toast.makeText(MainActivity.this, getResources().getString(R.string.main_activity_all_data_fetched_text), Toast.LENGTH_SHORT).show();
                     }
                 }
             }
         });
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        resetView();
     }
 
     @Override
@@ -202,35 +203,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
         switch (v.getId()) {
             case R.id.btn_toolbar_cancel:
-                AppUtil.hideDefaultKeyboard(MainActivity.this);
-                resetView();
-                break;
-            case R.id.et_toolbar_query_text:
-                populateSearchHistoryViewWithData();
+                cancelBtnClickEvent();
                 break;
 
             default:
                 break;
         }
     }
-
-    /*@Override
-    public boolean onQueryTextChange(String newText) {
-
-        if (newText.length() > 0)
-            mBtnCancel.setVisibility(View.VISIBLE);
-        else
-            mBtnCancel.setVisibility(View.GONE);
-
-        return true;
-    }
-
-    @Override
-    public boolean onQueryTextSubmit(String queryText) {
-        mQueryText = queryText;
-        fetchDataFromNewAPI(queryText, pageNumber);
-        return false;
-    }*/
 
     private void fetchDataFromNewAPI(String queryText, int pageNumber) {
 
@@ -247,17 +226,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                         if (pageNumber == 1) {
                             populateViewWithData(processResult.getResult());
                         } else {
-                            // Adding next set of data to the Adapter
+                            // Adding next set of news feed to the Adapter
                             mAdapter.addNewsFeed(processResult.getResult().getArticles());
                         }
                     } else if (processResult.getProcessStatus().equals(AppConst.PROCESS_RESULT_STATUS_UN_SUCCESS)) {
-                        final AlertDialog dialog = new AlertDialog.Builder(MainActivity.this).create();
-                        AppUtil.showCustomStandardAlert(dialog, MainActivity.this,
-                                getResources().getString(R.string.alert_text),
-                                processResult.getMessage(),
-                                getResources().getDrawable(R.drawable.ic_info),
-                                null,
-                                getResources().getString(R.string.ok_text), false);
+                        Toast.makeText(MainActivity.this, processResult.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 }
             }
@@ -268,10 +241,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     private void populateViewWithData(BeanNewsFeed beanNewsFeed) {
         mArticles = beanNewsFeed.getArticles();
         if (mArticles != null && mArticles.size() > 0) {
-            mNestedSV.setVisibility(View.VISIBLE);
             setUpRecyclerView(mArticles);
         } else {
-            mNestedSV.setVisibility(View.GONE);
             Toast.makeText(this, getResources().getString(R.string.main_activity_empty_result), Toast.LENGTH_SHORT).show();
         }
     }
@@ -281,17 +252,19 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
         mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.setVisibility(View.VISIBLE);
     }
 
     // Populate search history data
     private void populateSearchHistoryViewWithData() {
 
-        mViewModel.getLiveQueryTextListProcess();
+        mViewModel.getLiveFetchQueryTextListProcess();
 
         mViewModel.getLiveSearchHistoryProcessResult().observe(MainActivity.this, result -> {
 
             if (result != null) {
                 if (result.size() > 0) {
+                    mSearchHistoryList = result;
                     mRvSearchHistory.setVisibility(View.VISIBLE);
                     setUpSearchHistoryRecyclerView(result);
                 } else {
@@ -302,13 +275,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     private void setUpSearchHistoryRecyclerView(List<TB_SearchHistory> searchHistoryList) {
-        AppUtil.hideDefaultKeyboard(MainActivity.this);
         mSearchHistoryAdapter = new SearchHistoryAdapter(MainActivity.this, searchHistoryList, this);
         mRvSearchHistory.setHasFixedSize(true);
         mRvSearchHistory.setLayoutManager(new LinearLayoutManager(MainActivity.this));
         mRvSearchHistory.setAdapter(mSearchHistoryAdapter);
     }
 
+
+    // NewsFeed item click
     @Override
     public void onItemClick(int position, final Article article) {
 
@@ -324,29 +298,59 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
     }
 
+    // Search History item click
     @Override
     public void onSearchItemClick(int position, TB_SearchHistory historyItem) {
+        AppUtil.hideDefaultKeyboard(MainActivity.this);
         pageNumber = 1;
         mEtSearch.setText(historyItem.getQueryText());
-        mEtSearch.setSelection(historyItem.getQueryText().length());
-        mNestedSV.setVisibility(View.VISIBLE);
+        mEtSearch.setSelection(historyItem.getQueryText().length()); // Set cursor point
         mRvSearchHistory.setVisibility(View.GONE);
         fetchDataFromNewAPI(historyItem.getQueryText(), pageNumber);
     }
 
-    private void resetView() {
-        pageNumber = 1; // Set to default value
-        mEtSearch.clearFocus();
-        mNestedSV.setVisibility(View.GONE);
-        mRvSearchHistory.setVisibility(View.GONE);
-        mBtnCancel.setVisibility(View.GONE);
-        mEtSearch.setText("");
+    // Filter search history as per user input
+    //This feature added for best app behaviour and user experience
+    private void filterSearchHistoryList(String queryText) {
+        if (mSearchHistoryList != null && mSearchHistoryList.size() > 0) {
+            final List<TB_SearchHistory> filteredModelList = mViewModel.getLiveFilterSearchList(mSearchHistoryList,
+                    queryText).getValue();
 
-        //Clear News feed Recyclerview
-        if (mArticles != null) {
-            mArticles.clear();
-            mAdapter.notifyDataSetChanged();
+            if (filteredModelList != null && filteredModelList.size() > 0) {
+                mRvSearchHistory.setVisibility(View.VISIBLE);
+                mSearchHistoryAdapter.setFilter(filteredModelList);
+                mSearchHistoryAdapter.notifyDataSetChanged();
+            } else {
+                mRvSearchHistory.setVisibility(View.GONE);
+            }
         }
     }
+
+    private void cancelBtnClickEvent() {
+        AppUtil.hideDefaultKeyboard(MainActivity.this);
+        mEtSearch.clearFocus();
+        mRvSearchHistory.setVisibility(View.GONE);
+        mRecyclerView.setVisibility(View.GONE);
+        mBtnCancel.setVisibility(View.GONE);
+        mEtSearch.setText("");
+    }
+
+     /*@Override
+    public boolean onQueryTextChange(String newText) {
+
+        if (newText.length() > 0)
+            mBtnCancel.setVisibility(View.VISIBLE);
+        else
+            mBtnCancel.setVisibility(View.GONE);
+
+        return true;
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String queryText) {
+        mQueryText = queryText;
+        fetchDataFromNewAPI(queryText, pageNumber);
+        return false;
+    }*/
 
 }

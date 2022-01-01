@@ -10,6 +10,8 @@ import androidx.lifecycle.ViewModel;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.itelesoft.test.app.R;
 import com.itelesoft.test.app.config.AppConst;
 import com.itelesoft.test.app.database.model.TB_SearchHistory;
@@ -22,6 +24,7 @@ import com.itelesoft.test.app.retrofit.FetchNewsFeedRx;
 import com.itelesoft.test.app.utils.AppExecutor;
 import com.itelesoft.test.app.utils.AppUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Response;
@@ -34,7 +37,7 @@ public class MainActivityViewModel extends ViewModel {
 
     // Objects
     private Activity mActivity;
-    private MutableLiveData<List<TB_SearchHistory>> mLiveQueryTextList;
+    private MutableLiveData<List<TB_SearchHistory>> mLiveQueryTextList, mLiveFilterSearchList;
     private MutableLiveData<Boolean> mLiveProgressStatus;
     private MutableLiveData<ProcessResult<BeanNewsFeed>> mLiveFetchNewsFeedProgressResult;
 
@@ -97,12 +100,10 @@ public class MainActivityViewModel extends ViewModel {
             @Override
             public void serviceResponse(Response<JsonElement> serviceResponseResponse) {
                 Gson gson = new Gson();
+                Log.d(TAG, "Response Status --- " + serviceResponseResponse.isSuccessful());
                 if (serviceResponseResponse.isSuccessful()) {
                     BeanNewsFeed newsFeed = gson.fromJson(serviceResponseResponse.body(), BeanNewsFeed.class);
                     Log.w(TAG, "------ isSuccessful" + newsFeed.getArticles().size());
-
-                   // Insert query text to local db
-                    insertQueryText(queryText);
 
                     ProcessResult<BeanNewsFeed> result = new ProcessResult<>(AppConst.PROCESS_RESULT_ACTION_LOGIN,
                             AppConst.PROCESS_RESULT_STATUS_SUCCESS, newsFeed.getStatus(), newsFeed);
@@ -110,9 +111,12 @@ public class MainActivityViewModel extends ViewModel {
                     mLiveFetchNewsFeedProgressResult.postValue(result);
                 } else {
                     try {
-                        BeanError newsFeed = gson.fromJson(serviceResponseResponse.body(), BeanError.class);
+                        String errorBody = serviceResponseResponse.errorBody().string();
+                        JsonElement jsonElement = new JsonParser().parse(errorBody);
+                        JsonObject errorJsonObject = jsonElement.getAsJsonObject();
+                        String errorMessage = errorJsonObject.get("message").getAsString();
                         ProcessResult<BeanNewsFeed> result = new ProcessResult<>(AppConst.PROCESS_RESULT_ACTION_LOGIN,
-                                AppConst.PROCESS_RESULT_STATUS_UN_SUCCESS, newsFeed.getMessage(), null);
+                                AppConst.PROCESS_RESULT_STATUS_UN_SUCCESS, errorMessage, null);
                         mLiveFetchNewsFeedProgressResult.postValue(result);
 
                     } catch (Exception ex) {
@@ -141,7 +145,7 @@ public class MainActivityViewModel extends ViewModel {
         });
     }
 
-    public void getLiveQueryTextListProcess() {
+    public void getLiveFetchQueryTextListProcess() {
         mLiveQueryTextList = new MutableLiveData<>();
         List<TB_SearchHistory>[] queryTextList = new List[]{null};
 
@@ -151,6 +155,26 @@ public class MainActivityViewModel extends ViewModel {
             Log.w(TAG, "----- "+queryTextList[0].size());
             mLiveQueryTextList.postValue(queryTextList[0]);
         });
+    }
+
+
+    // Filter SearchTextList as per text change
+    public MutableLiveData<List<TB_SearchHistory>> getLiveFilterSearchList(List<TB_SearchHistory> searchTextList, String queryText) {
+        mLiveFilterSearchList = new MutableLiveData<>();
+
+        queryText = queryText.toLowerCase();
+
+        final ArrayList<TB_SearchHistory> filteredList = new ArrayList<>();
+        for (TB_SearchHistory item : searchTextList) {
+            final String text = item.getQueryText().toLowerCase();
+
+            if (text.contains(queryText)) {
+                filteredList.add(item);
+            }
+        }
+        mLiveFilterSearchList.setValue(filteredList);
+
+        return mLiveFilterSearchList;
     }
 
     public MutableLiveData<ProcessResult<BeanNewsFeed>> getLiveFetchNewsFeedProcessResult() {
