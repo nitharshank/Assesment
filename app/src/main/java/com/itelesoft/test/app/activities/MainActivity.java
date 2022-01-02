@@ -127,7 +127,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 if (s.length() > 0) {
                     filterSearchHistoryList(s.toString());
                 } else {
-                    populateSearchHistoryViewWithData();
+                    if (mBtnCancel.getVisibility() == View.VISIBLE)
+                        populateSearchHistoryViewWithData();
                 }
             }
 

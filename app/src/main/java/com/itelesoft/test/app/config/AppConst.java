@@ -15,7 +15,7 @@ public class AppConst {
     public static final String SANDBOX_API_KEY = "5088b7b10d074280a1cb5b4fec346108";
 
     // TODO API keys can be secure using by Android NDK if required--- https://www.geeksforgeeks.org/securing-api-keys-using-android-ndk/
-    public static final String PRODUCTION_API_KEY = "ccc544eb0dc943dabe29617f809f94ac";
+    public static final String PRODUCTION_API_KEY = "5088b7b10d074280a1cb5b4fec346108";
 
     public static final String PREFIX = "";
     public static final String CONTENT_TYPE = "application/json";
