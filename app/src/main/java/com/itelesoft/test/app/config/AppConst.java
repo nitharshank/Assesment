@@ -3,16 +3,18 @@ package com.itelesoft.test.app.config;
 public class AppConst {
 
     // Sandbox URL for fetch News Feed
-    public static final String SANDBOX_BASE_URL_FOR_ROLES = "https://newsapi.org/";
-
-    // TODO API keys can be secure using Android NDK if required--- https://www.geeksforgeeks.org/securing-api-keys-using-android-ndk/
-   // public static final String SANDBOX_API_KEY = "ccc544eb0dc943dabe29617f809f94ac";
-    public static final String SANDBOX_API_KEY = "5088b7b10d074280a1cb5b4fec346108";
+    public static final String SANDBOX_BASE_URL_FOR_NEWS_FEED = "https://newsapi.org/";
 
     // Production URL for for fetch News Feed
-    public static final String PRODUCTION_BASE_URL_FOR_ROLES = "https://newsapi.org/";
+    public static final String PRODUCTION_BASE_URL_FOR_NEWS_FEED = "https://newsapi.org/";
 
-    // TODO API keys can be secure using Android NDK if required--- https://www.geeksforgeeks.org/securing-api-keys-using-android-ndk/
+
+    // TODO API keys can be secure using by Android NDK if required--- https://www.geeksforgeeks.org/securing-api-keys-using-android-ndk/
+    // Note: please change the API Key with your own if the API hits reached the per day limit
+    // public static final String SANDBOX_API_KEY = "ccc544eb0dc943dabe29617f809f94ac";
+    public static final String SANDBOX_API_KEY = "5088b7b10d074280a1cb5b4fec346108";
+
+    // TODO API keys can be secure using by Android NDK if required--- https://www.geeksforgeeks.org/securing-api-keys-using-android-ndk/
     public static final String PRODUCTION_API_KEY = "ccc544eb0dc943dabe29617f809f94ac";
 
     public static final String PREFIX = "";
@@ -26,10 +28,10 @@ public class AppConst {
 
 
     public static final String SORT_BY_VALUE = "popularity";
-    public static final int PAGE_SIZE_VALUE = 10;
+    public static final int PAGE_SIZE_VALUE = 10; // Default value
 
     // Process Result Actions
-    public static final String PROCESS_RESULT_ACTION_LOGIN = "action_login";
+    public static final String PROCESS_RESULT_ACTION_FETCH_NEWS_FEED = "action_fetch_news_feed";
 
     // Process Result Status
     public static final String PROCESS_RESULT_STATUS_SUCCESS = "SUCCESS";

@@ -1,12 +1,9 @@
 package com.itelesoft.test.app.common;
 
 import android.app.Activity;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.text.Html;
 import android.text.TextUtils;
 import android.widget.EditText;
-import android.widget.SearchView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -46,36 +43,23 @@ public class BaseActivity extends AppCompatActivity {
         mToolbar = findViewById(R.id.toolbar);
         mToolbar.setTitle("");
         TextView tvTitle = findViewById(R.id.tv_toolbar_title);
-            tvTitle.setEllipsize(TextUtils.TruncateAt.MARQUEE);
-            tvTitle.setFocusable(true);
-            tvTitle.setFocusableInTouchMode(true);
-            tvTitle.requestFocus();
-            tvTitle.setSingleLine(true);
-            tvTitle.setSelected(true);
-            tvTitle.setMarqueeRepeatLimit(-1);
+        tvTitle.setEllipsize(TextUtils.TruncateAt.MARQUEE);
+        tvTitle.setFocusable(true);
+        tvTitle.setFocusableInTouchMode(true);
+        tvTitle.requestFocus();
+        tvTitle.setSingleLine(true);
+        tvTitle.setSelected(true);
+        tvTitle.setMarqueeRepeatLimit(-1);
         tvTitle.setText(toolbarName);
 
+        setSupportActionBar(mToolbar);
 
-        if (toolbarName.isEmpty()) {
-            // mToolbar.setBackgroundColor(Color.TRANSPARENT);
-        }
-
+        // If MainActivity
         if (activity.getClass().getSimpleName().equals(MainActivity.class.getSimpleName())) {
-
             EditText searchEt = findViewById(R.id.et_toolbar_query_text);
             searchEt.setFocusable(true);
             searchEt.setFocusableInTouchMode(true);
-
-            /*int id = searchView.getContext().getResources().getIdentifier("android:id/search_src_text", null, null);
-            TextView textView = searchView.findViewById(id);
-            textView.setTextColor(Color.BLACK);
-            textView.setHint("Search");
-            textView.setHintTextColor(Color.BLACK);
-            searchView.setQueryHint(Html.fromHtml("<font color = #ffffff>" + "Search" + "</font>"));*/
-        }
-
-        setSupportActionBar(mToolbar);
-        if (!activity.getClass().getSimpleName().equals(MainActivity.class.getSimpleName())) {
+        } else {
             getSupportActionBar().setDisplayShowHomeEnabled(true);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }

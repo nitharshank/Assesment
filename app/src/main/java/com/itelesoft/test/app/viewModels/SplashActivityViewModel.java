@@ -4,5 +4,5 @@ import androidx.lifecycle.ViewModel;
 
 public class SplashActivityViewModel extends ViewModel {
 
-    // TODO - Implement SplashActivity View Model here
+    // TODO - Implement SplashActivity View Model code here
 }

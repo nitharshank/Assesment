@@ -3,7 +3,7 @@
     xmlns:local="http://schemas.android.com/apk/res-auto"
     android:id="@+id/toolbar"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/_90sdp"
+    android:layout_height="@dimen/_100sdp"
     android:background="?attr/colorPrimary"
     android:minHeight="?attr/actionBarSize"
     local:popupTheme="@style/ThemeOverlay.AppCompat.Light"
@@ -12,7 +12,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/_24sdp"
+        android:layout_marginTop="@dimen/_32sdp"
         android:orientation="vertical">
 
         <TextView
@@ -33,9 +33,9 @@
             android:layout_width="0dp"
             android:layout_height="@dimen/_30sdp"
             android:layout_marginTop="@dimen/_8sdp"
-            android:layout_marginRight="@dimen/_8sdp"
             android:background="@drawable/rounded_corners_edit_text"
             android:drawableLeft="@drawable/ic_icon_search"
+            android:layout_marginEnd="@dimen/_10sdp"
             android:hint="@string/main_activity_toolbar_et_search_hint"
             android:imeOptions="actionSearch"
             android:inputType="text"
@@ -68,6 +68,7 @@
             android:textAllCaps="false"
             android:textColor="@color/colorWhite"
             android:textSize="@dimen/_11ssp"
+            android:gravity="center_vertical"
             android:visibility="gone"
             local:layout_constraintBottom_toBottomOf="@+id/et_toolbar_query_text"
             local:layout_constraintEnd_toEndOf="parent"

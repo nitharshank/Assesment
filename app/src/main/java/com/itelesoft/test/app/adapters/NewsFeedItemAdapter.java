@@ -19,7 +19,6 @@ import com.itelesoft.test.app.utils.AppUtil;
 import com.itelesoft.test.app.utils.CircleTransform;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class NewsFeedItemAdapter extends RecyclerView.Adapter<NewsFeedItemAdapter.MyViewHolder> {
@@ -66,7 +65,7 @@ public class NewsFeedItemAdapter extends RecyclerView.Adapter<NewsFeedItemAdapte
         holder.mPublishedAt.setTypeface(faceBold);
 
         if (article.getUrlToImage() != null && !article.getUrlToImage().isEmpty()) {
-
+            holder.mProgressBar.setVisibility(View.VISIBLE);
             Picasso.with(mContext).load(article.getUrlToImage()).transform(new CircleTransform()).into(holder.mThumbnail, new com.squareup.picasso.Callback() {
                 @Override
                 public void onSuccess() {
@@ -78,11 +77,13 @@ public class NewsFeedItemAdapter extends RecyclerView.Adapter<NewsFeedItemAdapte
                 @Override
                 public void onError() {
                     holder.mProgressBar.setVisibility(View.GONE);
+                    Picasso.with(mContext).load(R.drawable.image_error).into(holder.mThumbnail);
                 }
             });
 
         } else {
             // TODO Image url not found-----
+            Picasso.with(mContext).load(R.drawable.image_error).into(holder.mThumbnail);
         }
     }
 
@@ -120,14 +121,8 @@ public class NewsFeedItemAdapter extends RecyclerView.Adapter<NewsFeedItemAdapte
     public void addNewsFeed(List<Article> articles) {
         for (Article item : articles) {
             mArticles.add(item);
-            notifyDataSetChanged(); // TODO--------
+            notifyDataSetChanged();
         }
-    }
-
-    public void setFilter(List<Article> filteredArticles) {
-        mArticles = new ArrayList<>();
-        mArticles.addAll(filteredArticles);
-        notifyDataSetChanged();
     }
 
 }

@@ -13,7 +13,7 @@ import rx.Observable;
 
 public interface RxInterface {
 
-    // Fetch User Role list
+    // Fetch News Feed
     @GET(AppConst.PREFIX + "v2/everything?")
     Observable<Response<JsonElement>> fetchNewsFeed(@Header("Content-Type") String contentType, @QueryMap Map<String, String> params);
 

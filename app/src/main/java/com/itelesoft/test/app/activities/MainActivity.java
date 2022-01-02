@@ -127,11 +127,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
                 if (s.length() > 0) {
                     filterSearchHistoryList(s.toString());
                 } else {
-                    // This remove filter and add all searchText items
-                    if (mSearchHistoryList != null && mSearchHistoryList.size() > 0) {
-                        mSearchHistoryAdapter.setFilter(mSearchHistoryList);
-                        mSearchHistoryAdapter.notifyDataSetChanged();
-                    }
+                    populateSearchHistoryViewWithData();
                 }
             }
 
@@ -275,7 +271,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
     }
 
     private void setUpSearchHistoryRecyclerView(List<TB_SearchHistory> searchHistoryList) {
-        mSearchHistoryAdapter = new SearchHistoryAdapter(MainActivity.this, searchHistoryList, this);
+        mSearchHistoryAdapter = new SearchHistoryAdapter(searchHistoryList, this);
         mRvSearchHistory.setHasFixedSize(true);
         mRvSearchHistory.setLayoutManager(new LinearLayoutManager(MainActivity.this));
         mRvSearchHistory.setAdapter(mSearchHistoryAdapter);

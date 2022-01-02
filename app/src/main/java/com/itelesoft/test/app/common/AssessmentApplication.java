@@ -6,13 +6,12 @@ import com.facebook.stetho.Stetho;
 import com.itelesoft.test.app.BuildConfig;
 import com.itelesoft.test.app.database.ProjectDatabase;
 
-public class CompanyProjectApplication extends Application {
+public class AssessmentApplication extends Application {
 
     // Constants
-    private static final String TAG = CompanyProjectApplication.class.getSimpleName();
+    private static final String TAG = AssessmentApplication.class.getSimpleName();
 
     // Objects
-    //private DaoSession daoSession;
     private static ProjectDatabase projectDatabase;
 
     @Override
@@ -27,7 +26,7 @@ public class CompanyProjectApplication extends Application {
         }
     }
 
-    public static ProjectDatabase getRoomSession(){
+    public static ProjectDatabase getRoomSession() {
         return projectDatabase;
     }
 

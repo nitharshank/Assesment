@@ -79,6 +79,7 @@
         android:layout_height="@dimen/_25sdp"
         android:layout_gravity="center_horizontal"
         android:indeterminate="true"
+        android:visibility="gone"
         android:indeterminateDrawable="@drawable/progress_bg"
         android:progress="0"
         app:layout_constraintBottom_toBottomOf="@+id/row_news_feed_item_iv_thumbnail"

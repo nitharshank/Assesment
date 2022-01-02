@@ -46,16 +46,16 @@ public class FetchNewsFeedRx {
 
         Map<String, String> queryMap = new ArrayMap<>(6);
         if (BuildConfig.DEBUG) {
-            rXService = WebUtil.getRetrofitInstanceForUserRoles(AppConst.SANDBOX_BASE_URL_FOR_ROLES).create(RxInterface.class);
+            rXService = WebUtil.getRetrofitInstanceForUserRoles(AppConst.SANDBOX_BASE_URL_FOR_NEWS_FEED).create(RxInterface.class);
             queryMap.put(ApiConst.ATTR_TAG_API_KEY, AppConst.SANDBOX_API_KEY);
         } else {
-            rXService = WebUtil.getRetrofitInstanceForUserRoles(AppConst.PRODUCTION_BASE_URL_FOR_ROLES).create(RxInterface.class);
+            rXService = WebUtil.getRetrofitInstanceForUserRoles(AppConst.PRODUCTION_BASE_URL_FOR_NEWS_FEED).create(RxInterface.class);
             queryMap.put(ApiConst.ATTR_TAG_API_KEY, AppConst.PRODUCTION_API_KEY);
         }
 
 
         queryMap.put(ApiConst.ATTR_TAG_QUERY_TEXT_KEY, mQueryText);
-        queryMap.put(ApiConst.ATTR_TAG_QUERY_FROM_KEY, /*AppUtil.getToday()*/"2021-12-31"); // TODO no data fetching for 2022
+        queryMap.put(ApiConst.ATTR_TAG_QUERY_FROM_KEY, AppUtil.getToday()/*"2021-12-31"*/);
         queryMap.put(ApiConst.ATTR_TAG_QUERY_SORT_BY_KEY, AppConst.SORT_BY_VALUE);
         queryMap.put(ApiConst.ATTR_TAG_PAGE_SIZE_KEY, String.valueOf(AppConst.PAGE_SIZE_VALUE));
         queryMap.put(ApiConst.ATTR_TAG_PAGE_KEY, mPageCount);

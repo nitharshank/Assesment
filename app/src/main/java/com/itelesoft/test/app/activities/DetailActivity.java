@@ -110,7 +110,7 @@ public class DetailActivity extends BaseActivity implements View.OnClickListener
                 });
 
             } else {
-                // TODO Image url not found-----
+                // TODO Image url not found show only text data.
                 populateTextData();
             }
         }

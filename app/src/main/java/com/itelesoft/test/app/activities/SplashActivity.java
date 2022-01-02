@@ -2,7 +2,6 @@ package com.itelesoft.test.app.activities;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,14 +9,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.itelesoft.test.app.R;
 import com.itelesoft.test.app.utils.AppUtil;
 
-public class  SplashActivity extends AppCompatActivity {
+public class SplashActivity extends AppCompatActivity {
 
     // Constants
+    private static final String TAG = SplashActivity.class.getSimpleName();
 
     // UI Components
 
     // Objects
-    private Boolean mTabletDevice;
 
     @SuppressLint("SourceLockedOrientationActivity")
     @Override

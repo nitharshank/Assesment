@@ -16,7 +16,6 @@ import com.itelesoft.test.app.R;
 import com.itelesoft.test.app.config.AppConst;
 import com.itelesoft.test.app.database.model.TB_SearchHistory;
 import com.itelesoft.test.app.dtos.ProcessResult;
-import com.itelesoft.test.app.dtos.response.BeanError;
 import com.itelesoft.test.app.dtos.response.BeanNewsFeed;
 import com.itelesoft.test.app.interfaces.listeners.RxResponseListener;
 import com.itelesoft.test.app.repositories.MainActivityRepository;
@@ -33,7 +32,7 @@ import retrofit2.Response;
 public class MainActivityViewModel extends ViewModel {
 
     // Constants
-    private static final String TAG = MainActivityRepository.class.getSimpleName();
+    private static final String TAG = MainActivityViewModel.class.getSimpleName();
 
     // Objects
     private Activity mActivity;
@@ -53,9 +52,9 @@ public class MainActivityViewModel extends ViewModel {
     }
 
 
-    //-------- Login Process
+    //-------- Fetch news feed Process
     public void fetchNewsFeedProcess(String queryText, String pageNumber) {
-        Log.w(TAG, "---- "+queryText+" "+pageNumber);
+        Log.w(TAG, "---- " + queryText + " " + pageNumber);
         try {
             mLiveFetchNewsFeedProgressResult = new MutableLiveData<>();
 
@@ -86,7 +85,7 @@ public class MainActivityViewModel extends ViewModel {
 
         } catch (Exception ex) {
             ex.printStackTrace();
-            ProcessResult<BeanNewsFeed> result = new ProcessResult<>(AppConst.PROCESS_RESULT_ACTION_LOGIN, AppConst.PROCESS_RESULT_STATUS_UN_SUCCESS,
+            ProcessResult<BeanNewsFeed> result = new ProcessResult<>(AppConst.PROCESS_RESULT_ACTION_FETCH_NEWS_FEED, AppConst.PROCESS_RESULT_STATUS_UN_SUCCESS,
                     AppConst.PROCESS_RESULT_STATUS_UN_SUCCESS + "\nSystem Error:" + ex.getMessage(), null);
             mLiveFetchNewsFeedProgressResult.postValue(result);
             mLiveProgressStatus.postValue(false);
@@ -105,7 +104,7 @@ public class MainActivityViewModel extends ViewModel {
                     BeanNewsFeed newsFeed = gson.fromJson(serviceResponseResponse.body(), BeanNewsFeed.class);
                     Log.w(TAG, "------ isSuccessful" + newsFeed.getArticles().size());
 
-                    ProcessResult<BeanNewsFeed> result = new ProcessResult<>(AppConst.PROCESS_RESULT_ACTION_LOGIN,
+                    ProcessResult<BeanNewsFeed> result = new ProcessResult<>(AppConst.PROCESS_RESULT_ACTION_FETCH_NEWS_FEED,
                             AppConst.PROCESS_RESULT_STATUS_SUCCESS, newsFeed.getStatus(), newsFeed);
 
                     mLiveFetchNewsFeedProgressResult.postValue(result);
@@ -115,7 +114,7 @@ public class MainActivityViewModel extends ViewModel {
                         JsonElement jsonElement = new JsonParser().parse(errorBody);
                         JsonObject errorJsonObject = jsonElement.getAsJsonObject();
                         String errorMessage = errorJsonObject.get("message").getAsString();
-                        ProcessResult<BeanNewsFeed> result = new ProcessResult<>(AppConst.PROCESS_RESULT_ACTION_LOGIN,
+                        ProcessResult<BeanNewsFeed> result = new ProcessResult<>(AppConst.PROCESS_RESULT_ACTION_FETCH_NEWS_FEED,
                                 AppConst.PROCESS_RESULT_STATUS_UN_SUCCESS, errorMessage, null);
                         mLiveFetchNewsFeedProgressResult.postValue(result);
 
@@ -140,7 +139,7 @@ public class MainActivityViewModel extends ViewModel {
 
     public void insertQueryText(String title) {
         AppExecutor.getInstance().diskIO().execute(() -> {
-            //perform code for database operation
+            // Insert queryText to History table
             MainActivityRepository.getInstance().insertQueryTextToLocalDb((new TB_SearchHistory(title)));
         });
     }
@@ -150,15 +149,14 @@ public class MainActivityViewModel extends ViewModel {
         List<TB_SearchHistory>[] queryTextList = new List[]{null};
 
         AppExecutor.getInstance().diskIO().execute(() -> {
-            //perform code for database operation
+            // Load all queryTexts from History table
             queryTextList[0] = MainActivityRepository.getInstance().getAllQueryTextFromLocalDb();
-            Log.w(TAG, "----- "+queryTextList[0].size());
             mLiveQueryTextList.postValue(queryTextList[0]);
         });
     }
 
 
-    // Filter SearchTextList as per text change
+    // Filter SearchTextList as per queryText change
     public MutableLiveData<List<TB_SearchHistory>> getLiveFilterSearchList(List<TB_SearchHistory> searchTextList, String queryText) {
         mLiveFilterSearchList = new MutableLiveData<>();
 

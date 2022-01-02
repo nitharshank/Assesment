@@ -18,11 +18,11 @@ public interface TB_SearchHistoryDao {
     @Query("SELECT * FROM TB_SearchHistory ORDER BY id DESC")
     List<TB_SearchHistory> getAllQueryTexts();
 
+    // Dao method to load by queryText
     @Query("SELECT * FROM TB_SearchHistory where queryText = :text")
-    List<TB_SearchHistory> loadFromUser(String text);
+    List<TB_SearchHistory> loadByText(String text);
 
-
-    // Dao method to insert queryTexts
+    // Dao method to insert queryText
     @Insert(onConflict = IGNORE)
     void insertQueryText(TB_SearchHistory queryText);
 

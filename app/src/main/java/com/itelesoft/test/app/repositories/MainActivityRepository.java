@@ -16,15 +16,15 @@ public class MainActivityRepository extends MainRepository {
 
         List<TB_SearchHistory> queryTextList = getRoomDaoSession().searchHistoryDao().getAllQueryTexts();
 
-        if(!checkQueryTextExistInDb(queryTextList, queryText.getQueryText())) {
+        if (!checkQueryTextExistInDb(queryTextList, queryText.getQueryText())) {
             if (queryTextList.size() < 6) {
                 getRoomDaoSession().searchHistoryDao().insertQueryText(queryText);
             } else {
                 getRoomDaoSession().searchHistoryDao().deleteQueryText(queryTextList.get((queryTextList.size() - 1)));
                 getRoomDaoSession().searchHistoryDao().insertQueryText(queryText);
             }
-        }else{
-            //Already search text found in Local db -- Ignore it
+        } else {
+            //Already search text found in Local db, Ignore it
         }
 
     }
@@ -33,7 +33,7 @@ public class MainActivityRepository extends MainRepository {
     private boolean checkQueryTextExistInDb(List<TB_SearchHistory> queryTextList, String queryText) {
 
         boolean isFound = false;
-        // We are iterating here, Since the list size is small (Alw) else Better to use sqlite where clause query.
+        // TODO We looping here, because the list size is small (Always 6) else Better to use sqlite where clause query to check the data existence.
         for (TB_SearchHistory searchItem : queryTextList) {
             if (searchItem.getQueryText().equalsIgnoreCase(queryText)) {
                 isFound = true;
@@ -53,14 +53,5 @@ public class MainActivityRepository extends MainRepository {
         }
         return mInstance;
     }
-
-    //Async task to add note
-    /*public class AddNote extends AsyncTask<Note, Void, Void> {
-        @Override
-        protected Void doInBackground(Note... notes) {
-            getRoomDaoSession().noteDao().insertNote(notes[0]);
-            return null;
-        }
-    }*/
 
 }
